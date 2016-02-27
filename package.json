@@ -1,0 +1,29 @@
+{
+  "name": "lucid-client",
+  "version": "1.0.0",
+  "description": "JavaScript client for Lucid Servers",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "node test/test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lucid-ws/lucid-client.git"
+  },
+  "keywords": [
+    "lucid",
+    "websocket",
+    "javascript",
+    "browser",
+    "nodejs"
+  ],
+  "author": "Amish Shah <amishshah.2k@gmail.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/lucid-ws/lucid-client/issues"
+  },
+  "homepage": "https://github.com/lucid-ws/lucid-client#readme",
+  "dependencies": {
+    "ws": "^1.0.1"
+  }
+}

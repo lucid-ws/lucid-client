@@ -2,19 +2,35 @@
 
 const WebSocket = require("ws");
 const InternalClient = require("./internal-client");
+const InternalRequester = require("./internal-requester");
 const EventEmitter = require("events").EventEmitter;
 
 class LucidClient extends EventEmitter{
-	constructor(url, options, callback){
+	constructor(options, callback){
 		
 		super();
 		
-		this.url = url;
 		this.options = options;
 		this.wait_callback = callback || function(err){};
 		this.authenticated = false;
-		this.internal = new InternalClient(null, this);
+
+		this.api = new InternalRequester(this);
 		
+		this.api
+			._get("/meta")
+			.end((err, res) => {
+				if(err){
+					callback(err);
+					try{
+						this.emit("error", err);
+					}catch(e){}
+					this.emit("nostart");
+				}else{
+					this.connectionMeta = res.body;
+					this.internal = new InternalClient(null, this);
+				}
+			});
+				
 	}
 	
 	sendRaw(raw){
@@ -22,7 +38,6 @@ class LucidClient extends EventEmitter{
 	}
 	
 	send(type, data){
-		console.log(";o");
 		this.internal.send({
 			t : "custom_"+type,
 			d : data

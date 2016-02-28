@@ -6,7 +6,7 @@ const protocol_v = require("../index").protocol_v;
 class LucidInternalClient extends WebSocket{
 	
 	constructor(options, wrapper){
-		super(wrapper.url);
+		super(`ws://${wrapper.options.url}:${wrapper.connectionMeta.wss_port}`);
 		
 		this.wrapper = wrapper;
 		this.options = options;
@@ -85,6 +85,8 @@ class LucidInternalClient extends WebSocket{
 			this.wrapper.wait_callback(new Error(`closed before connect. code '${code}' and message '${message}'`));
 			this.wrapper.emit("nostart");
 		}
+		
+		this.intervals.map(interval => clearInterval(interval));
 	}
 	
 	eventError(error){

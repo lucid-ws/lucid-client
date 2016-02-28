@@ -2,10 +2,11 @@
 
 const LucidClient = require("../");
 
-var client = new LucidClient("ws://127.0.0.1:25543", null, function(err){
+var client = new LucidClient({url:"127.0.0.1", port:25543}, function(err){
 	if(err){
 		console.log("Couldn't start!");
 	}else{
-		client.send("test", {d: "pong!"});
+		console.log("Connected! Here is some info:");
+		console.log(client.connectionMeta);
 	}
 });

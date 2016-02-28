@@ -22,8 +22,9 @@ class LucidClient extends EventEmitter{
 	}
 	
 	send(type, data){
+		console.log(";o");
 		this.internal.send({
-			t : type,
+			t : "custom_"+type,
 			d : data
 		})
 	}

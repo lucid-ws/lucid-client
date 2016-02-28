@@ -7,6 +7,6 @@ var client = new LucidClient("ws://127.0.0.1:25543", null, function(err){
 		console.log("Couldn't start!");
 		throw err;
 	}else{
-		console.log("ready!");
+		client.send("test", {d: "pong!"});
 	}
 });

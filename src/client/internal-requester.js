@@ -58,6 +58,16 @@ class LucidInternalRequester{
 		return this.request.put(this.baseURL + join("api/", path));
 	}
 	
+	del(path){
+		return this.request
+			.del(this.baseURL + join("custom_api/", path))
+			.set("token", this.wrapper.token);
+	}
+	
+	_del(path){
+		return this.request.del(this.baseURL + join("api/", path));
+	}
+	
 }
 
 module.exports = LucidInternalRequester;

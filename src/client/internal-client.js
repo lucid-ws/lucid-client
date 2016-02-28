@@ -19,6 +19,7 @@ class LucidInternalClient extends WebSocket{
 		this.on("message", (data, flags) => this.eventMessage(data, flags));
 		this.on("close", (code, message) => this.eventClose(code, message));
 		this.on("error", error => this.eventError(error));
+		this.onerror = function(e){this.eventError(e)};
 	}
 	
 	eventOpen(){
@@ -87,10 +88,12 @@ class LucidInternalClient extends WebSocket{
 	}
 	
 	eventError(error){
-		this.wrapper.emit("error", error);
+		try{
+			this.wrapper.emit("error", error);
+		}catch(e){}
 		if(!this.wrapper.authenticated){
-			this.wrapper.wait_callback(error);
 			this.wrapper.emit("nostart");
+			this.wrapper.wait_callback(error);
 		}
 	}
 	

@@ -7,15 +7,15 @@ const EventEmitter = require("events").EventEmitter;
 
 class LucidClient extends EventEmitter{
 	constructor(options, callback){
-		
+
 		super();
-		
+
 		this.options = options;
 		this.wait_callback = callback || function(err){};
 		this.authenticated = false;
 
 		this.api = new InternalRequester(this);
-		
+
 		this.api
 			._get("/meta")
 			.end((err, res) => {
@@ -23,25 +23,28 @@ class LucidClient extends EventEmitter{
 					callback(err);
 					try{
 						this.emit("error", err);
-					}catch(e){}
+					}catch(e){
+						// required so that node doesn't throw an error
+					}
+
 					this.emit("nostart");
 				}else{
 					this.connectionMeta = res.body;
 					this.internal = new InternalClient(null, this);
 				}
 			});
-				
+
 	}
-	
+
 	sendRaw(raw){
 		this.internal.sendRaw(raw);
 	}
-	
+
 	send(type, data){
 		this.internal.send({
 			t : "custom_"+type,
 			d : data
-		})
+		});
 	}
 }
 

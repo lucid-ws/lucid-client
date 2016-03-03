@@ -1,5 +1,3 @@
-exports.protocol_v = "alpha2";
-
 var client;
 
 module.exports = client = require("./client/client");

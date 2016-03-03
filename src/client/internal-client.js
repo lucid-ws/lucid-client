@@ -1,13 +1,15 @@
 "use strict";
 
-const WebSocket = require("ws");
-const protocol_v = require("../index").protocol_v;
+const NWebSocket = require("ws");
+const protocol_v = "alpha2";
 
-class LucidInternalClient extends WebSocket{
+class LucidInternalClient{
 
 	constructor(options, wrapper){
-		super(`ws://${wrapper.options.url}:${wrapper.connectionMeta.wss_port}`);
-
+		if(window && window.WebSocket)
+			this.ws = new window.WebSocket(`ws://${wrapper.options.url}:${wrapper.connectionMeta.wss_port}`);
+		else
+			this.ws = new NWebSocket(`ws://${wrapper.options.url}:${wrapper.connectionMeta.wss_port}`);
 		this.wrapper = wrapper;
 		this.options = options;
 
@@ -15,11 +17,10 @@ class LucidInternalClient extends WebSocket{
 
 		this.temp = {};
 
-		this.on("open", () => this.eventOpen());
-		this.on("message", (data, flags) => this.eventMessage(data, flags));
-		this.on("close", (code, message) => this.eventClose(code, message));
-		this.on("error", error => this.eventError(error));
-		this.onerror = function(e){
+		this.ws.onopen = () => this.eventOpen();
+		this.ws.onmessage = (event) => this.eventMessage(event);
+		this.ws.onclose = (code, message) => this.eventClose(code, message);
+		this.ws.onerror = function(e){
 			this.eventError(e);
 		};
 	}
@@ -33,10 +34,10 @@ class LucidInternalClient extends WebSocket{
 		});
 	}
 
-	eventMessage(data, flags){
+	eventMessage(event){
 		var packet;
 		try{
-			packet = JSON.parse(data);
+			packet = JSON.parse(event.data);
 		}catch(e){
 			this.eventError(e);
 			return;
@@ -80,7 +81,7 @@ class LucidInternalClient extends WebSocket{
 
 	}
 
-	eventClose(code, message){
+	eventClose(code){
 		this.wrapper.emit("close", this.temp.dc_reason||"unknown", code, message);
 		if(!this.wrapper.authenticated){
 			this.wrapper.wait_callback(new Error(`closed before connect. code '${code}' and message '${message}'`));
@@ -110,12 +111,12 @@ class LucidInternalClient extends WebSocket{
 	}
 
 	sendRaw(raw){
-		super.send(raw);
+		this.ws.send(raw);
 	}
 
 	send(packet){
-		if(this.readyState === WebSocket.OPEN){
-			super.send(JSON.stringify(packet));
+		if(this.ws.readyState === WebSocket.OPEN){
+			this.ws.send(JSON.stringify(packet));
 			return true;
 		}else{
 			return false;

@@ -51,6 +51,10 @@ class LucidClient extends EventEmitter{
 			d : data
 		});
 	}
+
+	disconnect(reason, code, extra){
+		this.internal.disconnect(reason, code, extra);
+	}
 }
 
 module.exports = LucidClient;

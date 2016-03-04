@@ -138,7 +138,7 @@ class LucidInternalClient{
 
 		this.temp.dc_reason = reason;
 
-		this.close(code || 1000);
+		this.ws.close(code || 1000);
 	}
 
 }

@@ -20,6 +20,8 @@ class LucidClient extends EventEmitter{
 		this.api
 			._get("/meta")
 			.end((err, res) => {
+				alert(err);
+				alert(res.body.message);
 				if(err){
 					callback(err);
 					try{

@@ -13,6 +13,7 @@ class LucidClient extends EventEmitter{
 		this.options = options;
 		this.wait_callback = callback || function(err){};
 		this.authenticated = false;
+		this.token = null;
 
 		this.api = new InternalRequester(this);
 
@@ -34,6 +35,10 @@ class LucidClient extends EventEmitter{
 				}
 			});
 
+	}
+
+	get uuid(){
+		return this.token;
 	}
 
 	sendRaw(raw){

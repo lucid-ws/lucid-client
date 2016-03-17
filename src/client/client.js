@@ -15,6 +15,9 @@ class LucidClient extends EventEmitter{
 		this.authenticated = false;
 		this.token = null;
 
+		this.uuid = null;
+		this.token = null;
+
 		this.api = new InternalRequester(this);
 
 		this.api
@@ -30,15 +33,12 @@ class LucidClient extends EventEmitter{
 
 					this.emit("nostart");
 				}else{
+					console.log(":D");
 					this.connectionMeta = res.body;
 					this.internal = new InternalClient(null, this);
 				}
 			});
 
-	}
-
-	get uuid(){
-		return this.token;
 	}
 
 	sendRaw(raw){
